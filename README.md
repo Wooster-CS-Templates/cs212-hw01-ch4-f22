@@ -97,7 +97,8 @@ entire run, and not doing any I/Os.
 
 Let's make it slightly more complex by running two processes:
 
-prompt> ./process-run.py -l 5:100,5:100
+```
+$ ./process-run.py -l 5:100,5:100
 Produce a trace of what would happen when you run these processes:
 Process 0
   cpu
@@ -116,11 +117,13 @@ Process 1
 Important behaviors:
   Scheduler will switch when the current process is FINISHED or ISSUES AN IO
   After IOs, the process issuing the IO will run LATER (when it is its turn)
+```
 
 In this case, two different processes run, each again just using the CPU. What
 happens when the operating system runs them? Let's find out:
 
-prompt> ./process-run.py -l 5:100,5:100 -c
+```
+$ ./process-run.py -l 5:100,5:100 -c
 Time     PID: 0     PID: 1        CPU        IOs
   1     RUN:cpu      READY          1
   2     RUN:cpu      READY          1
@@ -132,6 +135,7 @@ Time     PID: 0     PID: 1        CPU        IOs
   8        DONE    RUN:cpu          1
   9        DONE    RUN:cpu          1
  10        DONE    RUN:cpu          1
+```
 
 As you can see above, first the process with "process ID" (or "PID") 0 runs,
 while process 1 is READY to run but just waits until 0 is done. When 0 is
@@ -142,7 +146,8 @@ Let's look at one more example before getting to some questions. In this
 example, the process just issues I/O requests. We specify here tht I/Os take 5
 time units to complete with the flag -L.
 
-prompt> ./process-run.py -l 3:0 -L 5
+```
+$ ./process-run.py -l 3:0 -L 5
 Produce a trace of what would happen when you run these processes:
 Process 0
   io-start
@@ -152,10 +157,12 @@ Process 0
 Important behaviors:
   System will switch when the current process is FINISHED or ISSUES AN IO
   After IOs, the process issuing the IO will run LATER (when it is its turn)
+```
 
 What do you think the execution trace will look like? Let's find out:
 
-prompt> ./process-run.py -l 3:0 -L 5 -c
+```
+$ ./process-run.py -l 3:0 -L 5 -c
 Time     PID: 0        CPU        IOs
   1  RUN:io-start          1
   2     WAITING                     1
@@ -173,6 +180,7 @@ Time     PID: 0        CPU        IOs
  14     WAITING                     1
  15     WAITING                     1
  16*       DONE
+```
 
 As you can see, the program just issues three I/Os. When each I/O is issued,
 the process moves to a WAITING state, and while the device is busy servicing
@@ -181,9 +189,11 @@ the I/O, the CPU is idle.
 Let's print some stats (run the same command as above, but with the -p flag)
 to see some overall behaviors: 
 
+```
 Stats: Total Time 16
 Stats: CPU Busy 3 (18.75%)
 Stats: IO Busy  12 (75.00%)
+```
 
 As you can see, the trace took 16 clock ticks to run, but the CPU was only
 busy less than 20% of the time. The IO device, on the other hand, was quite
@@ -191,23 +201,26 @@ busy. In general, we'd like to keep all the devices busy, as that is a better
 use of resources.
 
 There are a few other important flags:
-  -s SEED, --seed=SEED  the random seed  
-    this gives you way to create a bunch of different jobs randomly
 
-  -L IO_LENGTH, --iolength=IO_LENGTH
-    this determines how long IOs take to complete (default is 5 ticks)
+```
+-s SEED, --seed=SEED  the random seed  
+  this gives you way to create a bunch of different jobs randomly
 
-  -S PROCESS_SWITCH_BEHAVIOR, --switch=PROCESS_SWITCH_BEHAVIOR
-                        when to switch between processes: SWITCH_ON_IO, SWITCH_ON_END
-    this determines when we switch to another process:
-    - SWITCH_ON_IO, the system will switch when a process issues an IO
-    - SWITCH_ON_END, the system will only switch when the current process is done 
+-L IO_LENGTH, --iolength=IO_LENGTH
+  this determines how long IOs take to complete (default is 5 ticks)
 
-  -I IO_DONE_BEHAVIOR, --iodone=IO_DONE_BEHAVIOR
-                        type of behavior when IO ends: IO_RUN_LATER, IO_RUN_IMMEDIATE
-    this determines when a process runs after it issues an IO:
-    - IO_RUN_IMMEDIATE: switch to this process right now
-    - IO_RUN_LATER: switch to this process when it is natural to 
-      (e.g., depending on process-switching behavior)
+-S PROCESS_SWITCH_BEHAVIOR, --switch=PROCESS_SWITCH_BEHAVIOR
+                      when to switch between processes: SWITCH_ON_IO, SWITCH_ON_END
+  this determines when we switch to another process:
+  - SWITCH_ON_IO, the system will switch when a process issues an IO
+  - SWITCH_ON_END, the system will only switch when the current process is done 
+
+-I IO_DONE_BEHAVIOR, --iodone=IO_DONE_BEHAVIOR
+                      type of behavior when IO ends: IO_RUN_LATER, IO_RUN_IMMEDIATE
+  this determines when a process runs after it issues an IO:
+  - IO_RUN_IMMEDIATE: switch to this process right now
+  - IO_RUN_LATER: switch to this process when it is natural to 
+    (e.g., depending on process-switching behavior)
+```
 
 Now go answer the questions at the back of the chapter to learn more.
