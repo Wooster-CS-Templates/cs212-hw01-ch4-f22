@@ -3,26 +3,25 @@ This program, called process-run.py, allows you to see how the state of a
 process state changes as it runs on a CPU. As described in the chapter, 
 processes can be in a few different states:
 
-  RUNNING - the process is using the CPU right now
-  READY   - the process could be using the CPU right now
-            but (alas) some other process is
-  WAITING - the process is waiting on I/O
-            (e.g., it issued a request to a disk)
-  DONE    - the process is finished executing
+```
+RUNNING - the process is using the CPU right now
+READY   - the process could be using the CPU right now
+          but (alas) some other process is
+WAITING - the process is waiting on I/O
+          (e.g., it issued a request to a disk)
+DONE    - the process is finished executing
+```
 
 In this homework, we'll see how these process states change as a program
 runs, and thus learn a little bit better how these things work.
 
 To run the program and get its options, do this:
 
-prompt> ./process-run.py -h
-
-If this doesn't work, type "python" before the command, like this:
-
-prompt> python process-run.py -h
+`$ python3 ./process-run.py -h`
 
 What you should see is this:
 
+```
 Usage: process-run.py [options]
 
 Options:
@@ -45,6 +44,7 @@ Options:
   -c                    compute answers for me
   -p, --printstats      print statistics at end; only useful with -c flag
                         (otherwise stats are not printed)
+```
 
 The most important option to understand is the PROCESS_LIST (as specified by
 the -l or --processlist flags) which specifies exactly what each running
@@ -58,7 +58,8 @@ alternate between RUNNING on the CPU or being READY to run. For example, here
 is a simple run that just has one program being run, and that program only
 uses the CPU (it does no IO).
 
-prompt> ./process-run.py -l 5:100 
+```
+$ ./process-run.py -l 5:100 
 Produce a trace of what would happen when you run these processes:
 Process 0
   cpu
@@ -71,7 +72,7 @@ Important behaviors:
   System will switch when the current process is FINISHED or ISSUES AN IO
   After IOs, the process issuing the IO will run LATER (when it is its turn)
 
-prompt> 
+```
 
 Here, the process we specified is "5:100" which means it should consist of 5
 instructions, and the chances that each instruction is a CPU instruction are
@@ -80,13 +81,15 @@ instructions, and the chances that each instruction is a CPU instruction are
 You can see what happens to the process by using the -c flag, which computes the
 answers for you:
 
-prompt> ./process-run.py -l 5:100 -c
+```
+$ ./process-run.py -l 5:100 -c
 Time     PID: 0        CPU        IOs
   1     RUN:cpu          1
   2     RUN:cpu          1
   3     RUN:cpu          1
   4     RUN:cpu          1
   5     RUN:cpu          1
+```
 
 This result is not too interesting: the process is simple in the RUN state and
 then finishes, using the CPU the whole time and thus keeping the CPU busy the
@@ -208,7 +211,3 @@ There are a few other important flags:
       (e.g., depending on process-switching behavior)
 
 Now go answer the questions at the back of the chapter to learn more.
-
-
-
-
