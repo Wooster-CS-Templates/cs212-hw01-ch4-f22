@@ -223,4 +223,4 @@ There are a few other important flags:
     (e.g., depending on process-switching behavior)
 ```
 
-Now go answer the questions at the back of the chapter to learn more.
+Now go answer the questions at the back of the chapter to learn more. Write the answers to all of the questions in the `hw-answers.md` markdown file.
